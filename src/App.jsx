@@ -1,6 +1,7 @@
 import { useState } from "react";
 import styled, { css } from "styled-components";
 import Home from "./Home";
+import JobDetails from "./JobDetails";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
@@ -22,6 +23,10 @@ function App() {
           <Route
             path="/"
             element={<Home click={() => handleCircleClick()} circle={circle} />}
+          />
+          <Route
+            path="/JobDetails"
+            element={<JobDetails click={() => handleCircleClick()} circle={circle} />}
           />
         </Routes>
       </AppDiv>
