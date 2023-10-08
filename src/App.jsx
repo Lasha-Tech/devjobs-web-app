@@ -1,11 +1,46 @@
-import { useState } from 'react'
+import { useState } from "react";
+import styled, { css } from "styled-components";
+import Home from "./Home";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 function App() {
+  const [circle, setCircle] = useState("47");
+
+  // Day & Night Click Function
+  const handleCircleClick = () => {
+    if (circle === "47") {
+      setCircle("73");
+    } else {
+      setCircle("47");
+    }
+  };
+
   return (
-   <div className="App">
-    
-   </div> 
-  )
+    <Router>
+      <AppDiv circle={circle}>
+        <Routes>
+          <Route
+            path="/"
+            element={<Home click={() => handleCircleClick()} circle={circle} />}
+          />
+        </Routes>
+      </AppDiv>
+    </Router>
+  );
 }
 
-export default App
+export default App;
+
+// Styled Components
+const AppDiv = styled.div(
+  (props) => css`
+    @media (min-width: 375px) {
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 32px 24px 62px;
+      background-color: ${props.circle === "47" ? "#F4F6F8" : "#121721"};
+    }
+  `
+);
