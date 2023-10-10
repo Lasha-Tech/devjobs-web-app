@@ -2,10 +2,12 @@ import styled, { css } from "styled-components";
 import Header from "./Header";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import jobs from './data.json'
 
 const Home = ({ click, circle }) => {
+    const [jobCount, setJobCount] = useState(12)
     const [filterComponentRender, setFilterComponentRender] = useState(false);
-
+    
     const searchClick = () => {
         setFilterComponentRender(false)
     }
@@ -49,9 +51,8 @@ const Home = ({ click, circle }) => {
       </FilterContainer>
 
         {/* Filter Component */}
-        <FilterComponent filtercomponentrender={filterComponentRender}>
-            <FilterComponentBackground onClick={() => setFilterComponentRender(!filterComponentRender)}/>
-            <FilterComponenentContainer circle={circle}>
+        <FilterComponent filtercomponentrender={filterComponentRender} onClick={() => setFilterComponentRender(false)}>
+            <FilterComponenentContainer circle={circle} onClick={() => setFilterComponentRender(true)}>
                 {/* Input Filter By Location */}
                 <InputFilterByLocationDiv>
                     <SvgLocation xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 24" fill="none">
@@ -82,27 +83,35 @@ const Home = ({ click, circle }) => {
 
         {/* Main  */}
         <Main>
-            <JobListContainer>
-            <Link to='/JobDetails'>
-            <JobContainer circle={circle}>
-                <CompanyLogo backgroundcolor='orange'/>
-                <JobTimeContainer>
-                    {/* Job Time  */}
-                    <JobTime>5h ago</JobTime>
-                    <Period/>
-                    <JobTime>Full Time</JobTime>
-                </JobTimeContainer>
-
-                {/* Job Position  */}
-                <JobPosition circle={circle}>Senior Software Engineer</JobPosition>
-
-                {/* Company Name */}
-                <CompanyName>Scoot</CompanyName>
-
-                {/* Company Location  */}
-                <CompanyLocation>United Kingdom</CompanyLocation>
-            </JobContainer>
-            </Link>
+            <JobListContainer circle={circle}>
+              {jobs.map((job, index) => {
+                if(index < jobCount) {
+                  return (
+                    <Link to={'/JobDetails/' + job.id} key={job.id}>
+                    <JobContainer circle={circle}>
+                        <CompanyLogo backgroundcolor={job.logoBackground}>
+                          <CompanyLogoSvg src={job.logo}/>
+                        </CompanyLogo>
+                        <JobTimeContainer>
+                            {/* Job Time  */}
+                            <JobTime>{job.postedAt}</JobTime>
+                            <Period/>
+                            <JobTime>{job.contract}</JobTime>
+                        </JobTimeContainer>
+        
+                        {/* Job Position  */}
+                        <JobPosition circle={circle}>{job.position}</JobPosition>
+        
+                        {/* Company Name */}
+                        <CompanyName>{job.company}</CompanyName>
+        
+                        {/* Company Location  */}
+                        <CompanyLocation>{job.location}</CompanyLocation>
+                    </JobContainer>
+                    </Link>
+                        )
+                }
+              })}
             </JobListContainer>
         </Main>
 
@@ -119,6 +128,7 @@ const HomeContainer = styled.div(
     @media (min-width: 375px) {
       width: 100%;
       height: max-content;
+      padding: 32px 24px 62px;
     }
   `
 );
@@ -209,18 +219,16 @@ const FilterComponent = styled.div(
         width: 100%;
         height: 100%;
         display: ${props.filtercomponentrender? 'flex': 'none'};
-    `
-)
-const FilterComponentBackground = styled.div(
-    () => css`
-        width: 100%;
-        height: 100%;
-        background-color: #000;
-        opacity: 0.5;
+        justify-content: center;
+        align-items: center;
         position: absolute;
+        z-index: 3;
         top: 0;
         left: 0;
-        z-index: 2;
+        background-color: rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+        padding: 0 24px;
+        
     `
 )
 const FilterComponenentContainer = styled.div(
@@ -229,9 +237,6 @@ const FilterComponenentContainer = styled.div(
         height: 220px;
         border-radius: 6px;
         background-color: ${props.circle === "47" ? "#FFF" : "#19202D"};
-        position: relative;
-        z-index: 3;
-        top: 150px;
     `
 )
 const InputFilterByLocationDiv = styled.div(
@@ -278,14 +283,12 @@ const FullTimeCheckbox = styled.input(
         accent-color: #5964E0;
         outline: none;
         border: unset;
-        border-radius: 50px;
     `
 )
 const FullTimeCheckboxLabel = styled.p(
     (props) => css`
         color: ${props.circle === "47" ? "#19202D" : "#FFF"};
         font-family: 'Kumbh Sans';
-        font-size: 16px;
         font-weight: 700;
     `
 )
@@ -313,30 +316,30 @@ const Main = styled.div(
     () => css`
         @media (min-width: 375px) {
             width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
             overflow-x: hidden;
         }
     `
 )
 const JobListContainer = styled.div(
-    () => css`
+    (props) => css`
         width: 100%;
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
+        gap: 57px;
+        margin-top: 57px;
         justify-content: center;
-        padding: 0 24px;
+        padding: 0 24px 64px;
         position: absolute;
         top: 185px;
         left: 0;
+        background-color: ${props.circle === "47" ? "#F4F6F8" : "#121721"};
     `
 )
 const JobContainer = styled.div(
     (props) => css`
         @media (min-width: 375px) {
-            width: 100%;
+            width: 325px;
             height: 245px;
             background-color: ${props.circle === "47" ? "#FFF" : "#19202D"};
             border-radius: 6px;
@@ -344,14 +347,13 @@ const JobContainer = styled.div(
             flex-direction: column;
             align-items: flex-start;
             padding: 0 32px 36px;
-            margin-top: 57px;
         }
     `
 )
 const CompanyLogo = styled.div(
     (props) => css`
         width: 50px;
-        height: 50px;
+        min-height: 50px;
         background-color: ${props.backgroundcolor};
         border-radius: 15px;
         display: flex;
@@ -360,6 +362,13 @@ const CompanyLogo = styled.div(
         position: relative;
         top: -25px;
     `
+)
+const CompanyLogoSvg = styled.img(
+  () => css`
+    @media (min-width: 375px) {
+      width: max-content;
+    }
+  `
 )
 const JobTimeContainer = styled.div(
     () => css`
@@ -387,7 +396,7 @@ const JobPosition = styled.p(
         @media (min-width: 375px){
             color: ${props.circle === "47" ? "#19202D" : "#FFF"};
             font-family: 'Kumbh Sans';
-            font-size: 20px;
+            font-size: 19px;
             font-weight: 700;
             margin-top: 16px;
         }

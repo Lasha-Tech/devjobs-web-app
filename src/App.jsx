@@ -25,7 +25,7 @@ function App() {
             element={<Home click={() => handleCircleClick()} circle={circle} />}
           />
           <Route
-            path="/JobDetails"
+            path="/JobDetails/:id"
             element={<JobDetails click={() => handleCircleClick()} circle={circle} />}
           />
         </Routes>
@@ -44,7 +44,6 @@ const AppDiv = styled.div(
       min-height: 100vh;
       display: flex;
       justify-content: center;
-      padding: 32px 24px 62px;
       background-color: ${props.circle === "47" ? "#F4F6F8" : "#121721"};
     }
   `
