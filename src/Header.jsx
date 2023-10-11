@@ -1,4 +1,5 @@
 import styled, {css} from "styled-components";
+import { Link } from "react-router-dom";
 
 const Header = ({click, circle}) => {
     return (
@@ -19,7 +20,9 @@ const Header = ({click, circle}) => {
       {/* Header  */}
       <HeaderDiv>
         {/* Title  */}
+        <Link to='/'>
         <HeaderTitle>devjobs</HeaderTitle>
+        </Link>
 
         {/* Day & Night Changer Container  */}
         <DayNightContainer>

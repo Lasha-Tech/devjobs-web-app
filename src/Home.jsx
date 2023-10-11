@@ -1,16 +1,113 @@
 import styled, { css } from "styled-components";
 import Header from "./Header";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import jobs from './data.json'
+import vacancies from './data.json'
 
 const Home = ({ click, circle }) => {
+    const filterDiv = useRef(null)
+    const [error, setError] = useState(false)
+    const [titleInputValue, setTitleInputValue] = useState('')
+    const [locationInputValue, setLocationInputValue] = useState('')
+    const [fullTimeCheckbox, setFullTimeCheckbox] = useState(false)
     const [jobCount, setJobCount] = useState(12)
-    const [filterComponentRender, setFilterComponentRender] = useState(false);
+    const [filterComponentRender, setFilterComponentRender] = useState(false)
+    const [loadMoreRender, setLoadMoreRender] = useState(true)
+    const [jobList, setJobList] = useState([])
     
-    const searchClick = () => {
-        setFilterComponentRender(false)
+    const searchLocationClick = () => {
+      let filtered;
+      if(locationInputValue !== '') {
+        if(fullTimeCheckbox) {
+          filtered = vacancies.filter((job, index) => {
+            return job.location.toLowerCase().indexOf(locationInputValue.toLowerCase()) !== -1 && job.contract === 'Full Time' && index < jobCount
+          })
+          setLoadMoreRender(false)
+        } else {
+          filtered = vacancies.filter((job, index) => {
+            return job.location.toLowerCase().indexOf(locationInputValue.toLowerCase()) !== -1 && index < jobCount
+          })
+          setLoadMoreRender(false)
+        }
+      } else {
+        if(fullTimeCheckbox) {
+          filtered = vacancies.filter((job, index) => {
+            return job.contract === 'Full Time' && index < jobCount
+          })
+          setLoadMoreRender(false)
+        } else {
+          filtered = vacancies.filter((job, index) => {
+            return index < jobCount
+          })
+          setLoadMoreRender(true)
+        }
+      }
+      setJobList(filtered)
+      setFilterComponentRender(false)
+
+
+
+
+
     }
+
+// console.log(titleInputValue)
+// console.log(locationInputValue)
+
+
+const searchTitleClick = () => {
+  if(titleInputValue == '') {
+    const filtered = vacancies.filter((job, index) => {
+      return index < jobCount
+    })
+    setJobList(filtered)
+  } else {
+    const filtered = vacancies.filter((job, index) => {
+      return job.position.toLowerCase().indexOf(titleInputValue.toLowerCase()) !== -1 && index < jobCount
+    })
+    setJobList(filtered)
+  }
+}
+
+
+// Filter Component Click Function 
+const filterHandle = (e) => {
+  if(e.target === filterDiv.current) {
+    setFilterComponentRender(false)
+  }
+}
+
+
+
+
+// Job Count 
+useEffect(() => {
+  const jobs = vacancies.filter((job, index) => index < jobCount)
+  setJobList(jobs)
+
+  if(jobCount > 12) {
+    setLoadMoreRender(false)
+  }
+}, [jobCount])
+
+// Job List 
+useEffect(() => {
+  if(jobList.length == 0) {
+    setLoadMoreRender(false)
+    setError(true)
+  } else if(jobList.length > 0 && jobList.length < 12) {
+    setLoadMoreRender(false)
+    setError(false)
+  } else if(jobList.length === 12) {
+    setLoadMoreRender(true)
+    setError(false)
+  } else if(jobList.length == 15) {
+    setLoadMoreRender(false)
+    setError(false)
+  }
+}, [jobList])
+
+
 
   return (
     <HomeContainer>
@@ -21,6 +118,8 @@ const Home = ({ click, circle }) => {
       <FilterContainer circle={circle}>
         {/* Input Filter By Title */}
         <InputFilterByTitle
+          value={titleInputValue}
+          onChange={(e) => setTitleInputValue(e.target.value)}
           type="text"
           placeholder="Filter by title…"
           circle={circle}
@@ -38,7 +137,7 @@ const Home = ({ click, circle }) => {
           </Svg>
 
           {/* Search Button  */}
-          <SvgSearch xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+          <SvgSearch xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" onClick={() => searchTitleClick()}>
             <SvgRect width="48" height="48" rx="5"/>
             <SvgPath
               fillRule="evenodd"
@@ -51,14 +150,17 @@ const Home = ({ click, circle }) => {
       </FilterContainer>
 
         {/* Filter Component */}
-        <FilterComponent filtercomponentrender={filterComponentRender} onClick={() => setFilterComponentRender(false)}>
-            <FilterComponenentContainer circle={circle} onClick={() => setFilterComponentRender(true)}>
+        <FilterComponent filtercomponentrender={filterComponentRender}
+         ref={filterDiv} onClick={(e) => filterHandle(e)}>
+            <FilterComponenentContainer circle={circle}>
                 {/* Input Filter By Location */}
                 <InputFilterByLocationDiv>
                     <SvgLocation xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 24" fill="none">
                         <SvgPath fillRule="evenodd" clipRule="evenodd" d="M8.44772 0C10.6804 0 12.7797 0.870546 14.3585 2.45105C17.2803 5.37556 17.6434 10.8781 15.1348 14.2255L8.44772 23.894L1.75059 14.2119C-0.747974 10.8781 -0.384871 5.37556 2.53695 2.45105C4.11577 0.870546 6.21462 0 8.44772 0ZM5.47359 8.29091C5.47359 9.97484 6.84274 11.3455 8.52487 11.3455C10.207 11.3455 11.5762 9.97484 11.5762 8.29091C11.5762 6.60698 10.207 5.23636 8.52487 5.23636C6.84274 5.23636 5.47359 6.60698 5.47359 8.29091Z" fill="#5964E0"/>
                     </SvgLocation>
                     <InputFilterByLocation
+                        value={locationInputValue}
+                        onChange={(e) => setLocationInputValue(e.target.value)}
                         type="text"
                         placeholder="Filter by location…"
                         circle={circle}/>
@@ -69,12 +171,12 @@ const Home = ({ click, circle }) => {
                 <FilterMainDiv>
                     {/* Full Time Checkbox */}
                     <CheckboxDiv>
-                        <FullTimeCheckbox type="checkbox"/>
+                        <FullTimeCheckbox type="checkbox" onChange={(e) => setFullTimeCheckbox(e.target.checked)}/>
                         <FullTimeCheckboxLabel circle={circle}>Full Time Only</FullTimeCheckboxLabel>
                     </CheckboxDiv>
 
                     {/* Search Button  */}
-                    <Search onClick={() => searchClick()} circle={circle}>
+                    <Search onClick={() => searchLocationClick()} circle={circle}>
                         <SearchButtonText>Search</SearchButtonText>
                     </Search>
                 </FilterMainDiv>
@@ -84,7 +186,9 @@ const Home = ({ click, circle }) => {
         {/* Main  */}
         <Main>
             <JobListContainer circle={circle}>
-              {jobs.map((job, index) => {
+              {jobList.length !== 0 &&
+              
+              jobList.map((job, index) => {
                 if(index < jobCount) {
                   return (
                     <Link to={'/JobDetails/' + job.id} key={job.id}>
@@ -109,13 +213,26 @@ const Home = ({ click, circle }) => {
                         <CompanyLocation>{job.location}</CompanyLocation>
                     </JobContainer>
                     </Link>
-                        )
+                  )
                 }
               })}
+
+              {/* Error Message */}
+              {error &&
+                <ErrorMessage>
+                  Not Jobs Found
+                </ErrorMessage>
+              }
+
+              {/* Load More Button */}
+              <Footer>
+                {loadMoreRender &&
+                <LoadmoreButton onClick={() => setJobCount(jobCount + 6)}>
+                      Load More
+                </LoadmoreButton>}
+              </Footer>
             </JobListContainer>
         </Main>
-
-
     </HomeContainer>
   );
 };
@@ -216,7 +333,7 @@ const SearchContainer = styled.div(
 );
 const FilterComponent = styled.div(
     (props) => css`
-        width: 100%;
+        width: 100vw;
         height: 100%;
         display: ${props.filtercomponentrender? 'flex': 'none'};
         justify-content: center;
@@ -377,7 +494,7 @@ const JobTimeContainer = styled.div(
     `
 )
 const JobTime = styled.p(
-    (props) => css`
+    () => css`
         color: #6E8098;
         font-family: 'Kumbh Sans';
     `
@@ -396,7 +513,7 @@ const JobPosition = styled.p(
         @media (min-width: 375px){
             color: ${props.circle === "47" ? "#19202D" : "#FFF"};
             font-family: 'Kumbh Sans';
-            font-size: 19px;
+            font-size: 20px;
             font-weight: 700;
             margin-top: 16px;
         }
@@ -413,4 +530,38 @@ const CompanyLocation = styled.p(
         font-weight: 700;
         margin-top: 44px;
     `
+)
+const LoadmoreButton = styled.div(
+  () => css`
+    @media (min-width: 375px) {
+      width: 141px;
+      height: 48px;
+      background-color: rgba(89, 100, 224, 0.8);
+      color: #FFF;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Kumbh Sans';
+      font-weight: 700;
+      border-radius: 6px;
+      margin-top: -25px;
+    }
+  `
+)
+const Footer = styled.div(
+  () => css`
+    width: 100%;
+    display: flex;
+    justify-content: center;
+`
+)
+const ErrorMessage = styled.p(
+  () => css`
+    @media (min-width: 375px) {
+      font-size: 28px;
+      font-family: 'Kumbh Sans';
+      font-weight: 700;
+      color: rgba(89, 100, 224, 0.8);
+    }
+  `
 )

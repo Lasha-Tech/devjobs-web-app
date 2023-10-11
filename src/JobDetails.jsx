@@ -120,9 +120,11 @@ const JobDetails = ({click, circle}) => {
 
             {/* Footer */}
             <FooterContainer circle={circle}>
-                <Link to='/'>
-                <ApplyNowButton>Apply Now</ApplyNowButton>
-                </Link>
+                <CompanyApplyNowLink target='_blank' href={currentJob.apply}>
+                    <ApplyNowButton>
+                        Apply Now
+                    </ApplyNowButton>
+                </CompanyApplyNowLink>
             </FooterContainer>
         </JobDetailsComponent>
     );
