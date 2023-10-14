@@ -15,60 +15,72 @@ const Home = ({ click, circle }) => {
     const [loadMoreRender, setLoadMoreRender] = useState(true)
     const [jobList, setJobList] = useState([])
     
-    const searchLocationClick = () => {
+    const searchClick = () => {
       let filtered;
+      // By Location 
       if(locationInputValue !== '') {
-        if(fullTimeCheckbox) {
-          filtered = vacancies.filter((job, index) => {
-            return job.location.toLowerCase().indexOf(locationInputValue.toLowerCase()) !== -1 && job.contract === 'Full Time' && index < jobCount
-          })
-          setLoadMoreRender(false)
+        // By Title 
+        if(titleInputValue !== '') {
+          // By Time Checkbox 
+          if(fullTimeCheckbox) {
+            filtered = vacancies.filter((job, index) => {
+              return job.location.toLowerCase().indexOf(locationInputValue.toLowerCase()) !== -1 &&
+                    job.position.toLowerCase().indexOf(titleInputValue.toLowerCase()) !== -1 &&
+                    job.contract === 'Full Time' && index < jobCount
+            })
+          } else {
+            filtered = vacancies.filter((job, index) => {
+              return job.location.toLowerCase().indexOf(locationInputValue.toLowerCase()) !== -1 &&
+                    job.position.toLowerCase().indexOf(titleInputValue.toLowerCase()) !== -1 && index < jobCount
+            })
+          }
         } else {
-          filtered = vacancies.filter((job, index) => {
-            return job.location.toLowerCase().indexOf(locationInputValue.toLowerCase()) !== -1 && index < jobCount
-          })
-          setLoadMoreRender(false)
+          if(fullTimeCheckbox) {
+            filtered = vacancies.filter((job, index) => {
+              return job.location.toLowerCase().indexOf(locationInputValue.toLowerCase()) !== -1 &&
+                    job.contract === 'Full Time' && index < jobCount
+            })
+          } else {
+            filtered = vacancies.filter((job, index) => {
+              return job.location.toLowerCase().indexOf(locationInputValue.toLowerCase()) !== -1 && index < jobCount
+            })
+          }
         }
-      } else {
-        if(fullTimeCheckbox) {
-          filtered = vacancies.filter((job, index) => {
-            return job.contract === 'Full Time' && index < jobCount
-          })
+        setLoadMoreRender(false)
+      }
+      // By Location 
+      else {
+        // By Title 
+        if(titleInputValue !== '') {
+          // By Time Checkbox 
+          if(fullTimeCheckbox) {
+            filtered = vacancies.filter((job, index) => {
+              return job.position.toLowerCase().indexOf(titleInputValue.toLowerCase()) !== -1 &&
+                    job.contract === 'Full Time' && index < jobCount
+            })
+          } else {
+            filtered = vacancies.filter((job, index) => {
+              return job.position.toLowerCase().indexOf(titleInputValue.toLowerCase()) !== -1 && index < jobCount
+            })
+          }
           setLoadMoreRender(false)
         } else {
-          filtered = vacancies.filter((job, index) => {
-            return index < jobCount
-          })
-          setLoadMoreRender(true)
+          if(fullTimeCheckbox) {
+            filtered = vacancies.filter((job, index) => {
+              return job.contract === 'Full Time' && index < jobCount
+            })
+            setLoadMoreRender(false)
+          } else {
+            filtered = vacancies.filter((job, index) => {
+              return index < jobCount
+            })
+            setLoadMoreRender(true)
+          }
         }
       }
       setJobList(filtered)
       setFilterComponentRender(false)
-
-
-
-
-
     }
-
-// console.log(titleInputValue)
-// console.log(locationInputValue)
-
-
-const searchTitleClick = () => {
-  if(titleInputValue == '') {
-    const filtered = vacancies.filter((job, index) => {
-      return index < jobCount
-    })
-    setJobList(filtered)
-  } else {
-    const filtered = vacancies.filter((job, index) => {
-      return job.position.toLowerCase().indexOf(titleInputValue.toLowerCase()) !== -1 && index < jobCount
-    })
-    setJobList(filtered)
-  }
-}
-
 
 // Filter Component Click Function 
 const filterHandle = (e) => {
@@ -137,7 +149,7 @@ useEffect(() => {
           </Svg>
 
           {/* Search Button  */}
-          <SvgSearch xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" onClick={() => searchTitleClick()}>
+          <SvgSearch xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none" onClick={() => searchClick()}>
             <SvgRect width="48" height="48" rx="5"/>
             <SvgPath
               fillRule="evenodd"
@@ -176,7 +188,7 @@ useEffect(() => {
                     </CheckboxDiv>
 
                     {/* Search Button  */}
-                    <Search onClick={() => searchLocationClick()} circle={circle}>
+                    <Search onClick={() => searchClick()} circle={circle}>
                         <SearchButtonText>Search</SearchButtonText>
                     </Search>
                 </FilterMainDiv>
