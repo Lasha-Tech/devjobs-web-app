@@ -19,6 +19,19 @@ const Header = ({ click, circle }) => {
           />
         </HeaderBackgroundSvgLeft>
 
+        {/* Middle */}
+        <HeaderBackgroundSvgMiddle
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 355 108"
+        >
+          <SvgPath
+            fillRule="evenodd"
+            clipRule="evenodd"
+            d="M-71.4609 45.7412C-74.5785 13.9487 -41.7496 -9.03826 -12.9407 4.76502L331.22 169.663C359.511 183.219 362.718 222.23 337.02 240.224L30.1041 455.129C4.4064 473.122 -31.1552 456.766 -34.2168 425.545L-71.4609 45.7412Z"
+            fill="white"
+          />
+        </HeaderBackgroundSvgMiddle>
+
         {/* Right  */}
         <HeaderBackgroundSvgRight
           xmlns="http://www.w3.org/2000/svg"
@@ -135,15 +148,39 @@ const HeaderBackgroundSvgRight = styled.svg(
       top: -330px;
       right: 170px;
     }
+    
+    @media (min-width: 1440px) {
+      top: -200px;
+      right: 100px;
+      border-radius: 50%;
+      transform: rotate(0deg);
+    }
   `
 );
 const HeaderBackgroundSvgLeft = styled(HeaderBackgroundSvgRight)`
   width: 355px;
   height: 120px;
   transform: rotate(5deg);
-  top: 40px;
-  left: -5px;
+  top: 50px;
+  left: -30px;
 `;
+const HeaderBackgroundSvgMiddle = styled(HeaderBackgroundSvgLeft)`
+  @media(min-width: 375px) {
+    display: none;
+  }
+  @media(min-width: 768px) {
+    display: none;
+  }
+  @media(min-width: 1440px) {
+    display: block;
+    top: -250px;
+    left: 60px;
+    width: 500px;
+    height: 200px;
+    transform: rotate(260deg);
+    border-radius: 50%;
+}
+`
 const SvgPath = styled.path(
   () => css`
     width: max-content;
@@ -194,5 +231,11 @@ const SvgRect = styled.rect(
 const SvgCircle = styled.circle(
   () => css`
     fill: #5964e0;
+    @media (min-width: 1440px) {
+      &:hover {
+        fill: #939BF4;
+        cursor: pointer;
+      }
+    }
   `
 );

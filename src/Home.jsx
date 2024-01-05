@@ -250,6 +250,9 @@ const Home = ({ click, circle }) => {
             <FullTimeCheckboxLabel circle={circle}>
               Full Time
             </FullTimeCheckboxLabel>
+            <FullTimeCheckboxLabelDesktop circle={circle}>
+              Full Time Only
+            </FullTimeCheckboxLabelDesktop>
           </CheckboxDiv>
 
           {/* Search Button */}
@@ -282,7 +285,7 @@ const Home = ({ click, circle }) => {
                 fill="#5964E0"
               />
             </SvgLocationMobile>
-            <InputFilterByLocation
+            <InputFilterByLocationMobile
               value={locationInputValue}
               onChange={(e) => setLocationInputValue(e.target.value)}
               type="text"
@@ -368,16 +371,18 @@ export default Home;
 // Styled Components
 const HomeContainer = styled.div(
   () => css`
+    width: 100%;
+    height: max-content;
     @media (min-width: 375px) {
-      width: 100%;
-      height: max-content;
       padding: 32px 24px 62px;
     }
 
     @media (min-width: 768px) {
-      width: 100%;
-      height: max-content;
       padding: 42px 40px 62px;
+    }
+
+    @media (min-width: 1440px) {
+      padding: 44px 165px;
     }
   `
 );
@@ -509,6 +514,11 @@ const FilterTitleContainer = styled.div(
       padding: 16px 53px 16px 24px;
       border-right: 1px solid rgba(110, 128, 152, 0.2);
     }
+    @media (min-width: 1440px) {
+      &:hover {
+        cursor: pointer;
+      }
+    }
   `
 );
 
@@ -551,6 +561,11 @@ const FilterLocationContainer = styled.div(
       padding: 16px 21px 16px 24px;
       border-right: 1px solid rgba(110, 128, 152, 0.2);
     }
+    @media (min-width: 1440px) {
+      &:hover {
+        cursor: pointer;
+      }
+    }
   `
 );
 
@@ -571,10 +586,53 @@ const SearchContainer = styled.div(
     }
   `
 );
+const InputFilterByLocationMobile = styled.input(
+  (props) => css`
+    @media (min-width: 375px) {
+      width: 60%;
+      background-color: ${props.circle === "47" ? "#FFF" : "#19202D"};
+      color: ${props.circle === "47" ? "#19202D" : "#FFF"};
+      font-family: "Kumbh Sans";
+      font-size: 16px;
+      border: none;
+      outline: none;
+      &::placeholder {
+        opacity: 0.5;
+        color: ${props.circle === "47" ? "#19202D" : "#FFF"};
+        font-family: "Kumbh Sans";
+        font-size: 16px;
+      }
+    }
 
-const InputFilterByLocation = styled(InputFilterByTitle)`
-  width: 100%;
-`;
+    @media (min-width: 768px) {
+      display: none;
+    }
+  `
+);
+const InputFilterByLocation = styled.input(
+  (props) => css`
+    @media (min-width: 375px) {
+      display: none;
+    }
+
+    @media (min-width: 768px) {
+      width: 100%;
+      background-color: ${props.circle === "47" ? "#FFF" : "#19202D"};
+      color: ${props.circle === "47" ? "#19202D" : "#FFF"};
+      font-family: "Kumbh Sans";
+      font-size: 16px;
+      border: none;
+      outline: none;
+      display: inline-block;
+      &::placeholder {
+        opacity: 0.5;
+        color: ${props.circle === "47" ? "#19202D" : "#FFF"};
+        font-family: "Kumbh Sans";
+        font-size: 16px;
+      }
+    }
+  `
+);
 const SearchContainerMobile = styled.div(
   () => css`
     @media (min-width: 375px) {
@@ -658,6 +716,11 @@ const FullTimeCheckbox = styled.input(
     accent-color: #5964e0;
     outline: none;
     border: unset;
+    @media (min-width: 1440px) {
+      &:hover {
+        cursor: pointer;
+      }
+    }
   `
 );
 const FullTimeCheckboxLabel = styled.p(
@@ -671,6 +734,24 @@ const FullTimeCheckboxLabel = styled.p(
 
     @media (min-width: 1440px) {
       display: none;
+    }
+  `
+);
+const FullTimeCheckboxLabelDesktop = styled.p(
+  (props) => css`
+    @media (min-width: 375px) {
+      display: none;
+    }
+
+    @media (min-width: 768px) {
+      display: none;
+    }
+
+    @media (min-width: 1440px) {
+      display: inline-block;
+      color: ${props.circle === "47" ? "#19202D" : "#FFF"};
+      font-family: "Kumbh Sans";
+      font-weight: 700;
     }
   `
 );
@@ -688,6 +769,12 @@ const Search = styled.div(
     @media (min-width: 768px) {
       width: 35%;
     }
+    @media (min-width: 1440px) {
+      &:hover {
+        background-color: #939BF4;
+        cursor: pointer;
+      }
+    }
   `
 );
 const SearchButtonText = styled.p(
@@ -699,6 +786,7 @@ const SearchButtonText = styled.p(
     }
   `
 );
+
 const Main = styled.div(
   () => css`
     @media (min-width: 375px) {
@@ -728,6 +816,14 @@ const JobListContainer = styled.div(
       row-gap: 65px;
       column-gap: 11px;
       padding: 0 40px 62px;
+    }
+
+    @media (min-width: 1440px) {
+      row-gap: 65px;
+      column-gap: 30px;
+      padding: 0 165px 105px;
+      justify-content: space-between;
+      top: 220px;
     }
   `
 );
@@ -771,9 +867,7 @@ const CompanyLogo = styled.div(
 );
 const CompanyLogoSvg = styled.img(
   () => css`
-    @media (min-width: 375px) {
-      width: max-content;
-    }
+    width: max-content;
   `
 );
 const JobTimeContainer = styled.div(
@@ -805,6 +899,12 @@ const JobPosition = styled.p(
       font-size: 20px;
       font-weight: 700;
       margin-top: 16px;
+    }
+    @media (min-width: 1440px) {
+      &:hover {
+        color: #6E8098;
+        cursor: pointer;
+      }
     }
   `
 );
@@ -844,6 +944,13 @@ const LoadmoreButton = styled.div(
 
     @media (min-width: 768px) {
       margin-top: -10px;
+    }
+
+    @media (min-width: 1440px) {
+      &:hover {
+        background-color:#939BF4;
+        cursor: pointer;
+      }
     }
   `
 );

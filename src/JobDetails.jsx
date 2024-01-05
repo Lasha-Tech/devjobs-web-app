@@ -1,6 +1,6 @@
 import styled, { css } from "styled-components";
 import Header from "./Header";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import jobs from "./data.json";
 
 const JobDetails = ({ click, circle }) => {
@@ -161,6 +161,10 @@ const ParentContainer = styled.div(
       height: max-content;
       padding: 32px 24px 64px;
     }
+
+    @media (min-width: 1440px) {
+      padding: 32px 355px 80px;
+    }
   `
 );
 const AboutCompanyContainer = styled.div(
@@ -241,9 +245,7 @@ const CompanyLogo = styled.div(
 );
 const CompanyLogoSvg = styled.img(
   () => css`
-    @media (min-width: 375px) {
-      width: max-content;
-    }
+    width: max-content;
   `
 );
 const CompanyNameLinkContainer = styled.div(
@@ -289,6 +291,11 @@ const CompanySiteButton = styled.div(
       align-items: center;
       background-color: rgba(89, 100, 224, 0.1);
       border-radius: 5px;
+    }
+    @media (min-width: 1440px) {
+      &:hover {
+        background-color: rgba(89, 100, 224, 0.3);
+      }
     }
   `
 );
@@ -437,6 +444,13 @@ const ApplyNowButton = styled.button(
     @media (min-width: 768px) {
       width: 141px;
     }
+
+    @media (min-width: 1440px) {
+      &:hover {
+        background-color: #939BF4;
+        cursor: pointer;
+      }
+    }
   `
 );
 const JobDetailsText = styled.p(
@@ -524,6 +538,9 @@ const FooterContainer = styled.div(
       justify-content: space-between;
       align-items: center;
       padding: 0 40px;
+    }
+    @media (min-width: 1440px) {
+      padding: 0 355px;
     }
   `
 );
