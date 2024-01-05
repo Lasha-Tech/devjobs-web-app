@@ -256,8 +256,8 @@ const Home = ({ click, circle }) => {
           </CheckboxDiv>
 
           {/* Search Button */}
-          <Search>
-            <SearchButtonText onClick={() => searchClick()} circle={circle}>
+          <Search onClick={() => searchClick()}>
+            <SearchButtonText circle={circle}>
               Search
             </SearchButtonText>
           </Search>
